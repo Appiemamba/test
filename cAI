@@ -1,0 +1,36 @@
+
+# Beslisboom data
+decision_tree = {
+    "Do you use an automated component (AI)?": {
+        "Yes": {
+            "Does your application qualify as critical AI?": {
+                "Yes": "High-Risk Compliance Required",
+                "No": {
+                    "Are you creating AI with significant public impact?": {
+                        "Yes": "Moderate Risk Compliance Required",
+                        "No": "Low-Risk Compliance or Exempt",
+                    },
+                },
+            },
+        },
+        "No": "No Compliance Required",
+    }
+}
+
+# Functie om door de boom te navigeren
+def navigate_tree(tree):
+    question = list(tree.keys())[0]
+    options = list(tree[question].keys())
+
+    st.write(f"### {question}")
+    choice = st.radio("Select an option:", options)
+
+    if isinstance(tree[question][choice], dict):
+        navigate_tree(tree[question][choice])
+    else:
+        st.success(f"Result: {tree[question][choice]}")
+
+# Streamlit interface
+st.title("Interactive Decision Tree")
+st.write("Answer the questions to navigate through the decision tree.")
+navigate_tree(decision_tree)
